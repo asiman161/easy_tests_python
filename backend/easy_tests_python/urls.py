@@ -16,6 +16,9 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+from task.views import ListCreateTasks
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'api/tasks', ListCreateTasks.as_view(), name='list_tasks')
 ]
