@@ -9,9 +9,16 @@
 /node_modules
 /frontend/node_modules
 
-*.log
+# virtualenvs
 /.vagrant
+
+# python
+*.log
 __pycache__
+/backend/static
+
+# frontend
+/frontend/dist
 
 # IDEs and editors
 /.idea

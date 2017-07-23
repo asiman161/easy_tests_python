@@ -117,12 +117,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-STATIC_ROOT = 'staticfiles'
+
+ANGULAR_APP_DIR = os.path.join(BASE_DIR, '../frontend/dist')
+
+STATICFILES_DIRS = [
+    os.path.join(ANGULAR_APP_DIR),
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
-STATICFILES_DIR = (
-    os.path.join(BASE_DIR, 'static')
-)
+
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
