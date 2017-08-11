@@ -19,7 +19,7 @@ from django.contrib.staticfiles.views import serve
 from django.views.generic import RedirectView
 from rest_framework_jwt.views import obtain_jwt_token
 
-from task.views import ListCreateTasks
+from tasks.views import ListCreateTasks
 
 urlpatterns = [
     url(r'^$', serve, kwargs={'path': 'index.html'}),
