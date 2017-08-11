@@ -11,11 +11,16 @@
 
 # virtualenvs
 /.vagrant
+/lib
+/bin
+/include
 
 # python
+/.Python
 *.log
 __pycache__
 /backend/static
+/pip-selfcheck.json
 
 # frontend
 /frontend/dist
