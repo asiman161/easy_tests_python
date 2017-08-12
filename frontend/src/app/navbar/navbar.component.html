@@ -1,0 +1,18 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="col-xs-12">
+      <div class="row between-xs">
+        <div class="navbar-open md-hide lg-hide" (click)="showSidebar()">
+          <i class="fa fa-bars"></i>
+        </div>
+        <div class="navbar-logo">
+          <a routerLink="/feedback">обратная связь</a>
+        </div>
+        <div class="navbar-profile">
+          <button class="btn btn-default btn-sm" (click)="signOut()">Выход</button>
+          <!--<a routerLink="/auth">to auth</a>-->
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

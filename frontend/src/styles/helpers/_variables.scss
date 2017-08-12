@@ -1,0 +1,25 @@
+$base-font-family: "roboto", roboto, sans-serif;
+$base-font-weight: 400;
+
+$base-color: #333;
+
+// Colors
+$white: #fff;
+$white-gray: #f5f5f5;
+$gray: #ccc;
+$light-gray: #aaa;
+$white-gray-border: darken($white-gray, 9%);
+$dark-gray: #666;
+$aquamarine: #1abb9c;
+$light-red: #ce5454;
+
+// Media Queries
+$xs-screen: "only screen and (max-width: 47em)";
+$sm-screen: "only screen and (min-width: 48em)";
+$md-screen: "only screen and (min-width: 64em)";
+$lg-screen: "only screen and (min-width: 75em)";
+$xs-screen-value: 47em;
+$sm-screen-value: 48em;
+$md-screen-value: 64em;
+$lg-screen-value: 75em;
+

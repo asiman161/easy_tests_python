@@ -1,0 +1,26 @@
+<div [formGroup]="questionForm">
+  <div class="form-group form-group_vertical"
+       [class.has-error]="!questionForm.controls.question_text.valid && questionForm.controls.question_text.touched">
+    <div class="row column">
+      <label>
+        <span>Вопрос № {{questionIndex + 1}}</span>
+        <i class="fa fa-times" *ngIf="questionsCount > 1" (click)="removeQuestionIndex(questionIndex)"
+           aria-hidden="true"></i>
+      </label>
+      <textarea class="form-control" rows="3" formControlName="question_text"></textarea>
+      <div class="error-message" [hidden]="questionForm.controls.question_text.valid">
+        Вопрос обязателен
+      </div>
+    </div>
+  </div>
+  <div class="mr-left-1" formArrayName="question_answers" *ngIf="testType === 1">
+    <div class="mr-bottom-05" *ngFor="let answer of questionForm.controls.question_answers.controls; index as i; last as last">
+      <app-answer [answerForm]="questionForm.controls.question_answers.controls[i]"
+                 [answerIndex]="i"
+                 [answersCount]="questionForm.controls.question_answers.controls.length"
+                 (removeAnswer)="removeAnswer($event)"
+                 (setAnswer)="setAnswer($event)"></app-answer>
+      <button class="btn btn-default btn-sm mr-minus-05" *ngIf="last" (click)="addAnswer()">добавить ответ</button>
+    </div>
+  </div>
+</div>

@@ -13,7 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.staticfiles.views import serve
 from django.views.generic import RedirectView
@@ -25,7 +25,7 @@ urlpatterns = [
     url(r'^$', serve, kwargs={'path': 'index.html'}),
     url(r'^(?!/?static/)(?!/?media/)(?P<path>.*\..*)$',
         RedirectView.as_view(url='/static/%(path)s', permanent=False)),
-    url(r'^api-token-auth/', obtain_jwt_token),
+    url(r'^api/auth/', include('users.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^api/tasks', ListCreateTasks.as_view(), name='list_tasks'),
 ]

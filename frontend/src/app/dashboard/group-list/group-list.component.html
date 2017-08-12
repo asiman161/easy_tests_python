@@ -1,0 +1,113 @@
+<div class="page-title">
+  <h3>Группа</h3>
+</div>
+<div *ngIf="!!user.group_id">
+  <div>Ваша группа: {{groupInfo.group_name}}</div>
+  <div>Ваш курс: {{groupInfo.group_age}}</div>
+  <div>
+    <span *ngIf="user.role === 1">Староста: {{elderName}}</span>
+    <span *ngIf="user.role === 2">Вы являетесь старостой данной группы</span>
+  </div>
+
+  <div *ngIf="user.role === 2">
+    <div>Вы можете обновить данные о вашей группе</div>
+    <div *ngIf="!editingGroup">
+      <button class="btn btn-default btn-xs" (click)="groupNewInfo()">Обновить</button>
+    </div>
+    <div *ngIf="editingGroup">
+      <form [formGroup]="groupForm" novalidate (submit)="updateGroup(groupForm)">
+        <div class="form-group"
+             [class.has-error]="!groupForm.controls.group_name.valid && groupForm.controls.group_name.touched">
+          <div class="row">
+            <label class="col-xs-12 col-sm-2">Имя*</label>
+            <div class="col-xs-12 col-sm-6">
+              <input type="text" class="form-control" formControlName="group_name">
+            </div>
+            <div class=" col-xs-12 col-sm-3 error-message">
+              Название обязательно, 2+ символов
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <label class="col-xs-12 col-sm-2">Курс</label>
+            <div class="col-xs-12 col-sm-6">
+              <input type="text" class="form-control" formControlName="group_age">
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>
+            <input type="checkbox" formControlName="reset_key">
+            <span>Обновить ключ</span>
+          </label>
+        </div>
+        <div class="mr-top-05 mr-bottom-05">
+          <button class="btn btn-success btn-sm" type="submit">Сохранить</button>
+          <button class="btn btn-danger btn-sm" type="button" (click)="editingGroup = false">Отмена</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div>
+    <div>Список преподавателей
+      <button class="btn btn-default btn-xs" *ngIf="user.role === 2 && !addingTeacher" (click)="addingTeacher = true">
+        Добавить
+      </button>
+      :
+    </div>
+    <div *ngIf="addingTeacher && user.role === 2">
+      <form [formGroup]="newTeacher" (submit)="addTeacher(newTeacher)">
+        <div class="form-group"
+             [class.has-error]="!newTeacher.controls.key.valid && newTeacher.controls.key.touched">
+          <div class="row">
+            <label class="col-xs-12 col-sm-2">Ключ преподавателя</label>
+            <div class="col-xs-12 col-sm-6">
+              <input type="text" class="form-control" formControlName="key">
+            </div>
+            <div class="col-xs-12 col-sm-3 error-message">
+              Ключ не может быть меньше 8 или больше 9 символов
+            </div>
+          </div>
+        </div>
+        <div class="mr-top-05 mr-bottom-05">
+          <button class="btn btn-success btn-sm" type="submit">Сохранить</button>
+          <button class="btn btn-danger btn-sm" type="button" (click)="addingTeacher = false">Отмена</button>
+        </div>
+      </form>
+    </div>
+    <div *ngFor="let teacher of teachers; index as i">
+      <span>{{teacher.last_name}} {{teacher.first_name}} {{teacher.patronymic}}</span>
+      <button class="btn btn-danger btn-xs" *ngIf="user.role === 2" (click)="deleteTeacher(teacher.id, i)">Удалить
+      </button>
+    </div>
+  </div>
+  <div>
+
+    <div>Список студентов :</div>
+
+    <div *ngFor="let student of groupInfo.students; index as i">
+      <span>{{student.last_name}} {{student.first_name}} {{student.patronymic}}</span>
+      <button class="btn btn-danger btn-xs" *ngIf="user.role === 2 && student.role !== 2"
+              (click)="deleteStudent(student.id, i)">Удалить
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<div *ngIf="!user.group_id">
+  <div *ngIf="user.role === 1">
+    <div>Вы можете ввести ключ к вашей группе. Вы можете его узнать у вашего старосты</div>
+    <form [formGroup]="insertGroup" novalidate (submit)="save(insertGroup)">
+      <div>
+        <label for="group-hash">Ключ группы</label>
+        <input type="text" id="group-hash" formControlName="group_key">
+        <small *ngIf="!insertGroup.controls.group_key.valid">
+          Ключ обязателен, 8+ символов
+        </small>
+      </div>
+      <button class="btn btn-success" type="submit">Создать</button>
+    </form>
+  </div>
+</div>

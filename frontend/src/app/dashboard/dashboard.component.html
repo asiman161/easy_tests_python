@@ -1,0 +1,15 @@
+<div class="layout">
+  <app-navbar (openSidebar)="openSidebar()"></app-navbar>
+  <div class="main-wrapper row">
+    <div class="sidebar-wrapper col-xs-12 col-md-3" [ngClass]="{'open-sidebar': showSidebar}">
+      <app-sidebar></app-sidebar>
+    </div>
+    <div class="content-wrapper col-xs-12 col-md-9">
+      <!--<div class="row">-->
+        <div class="col-xs-12 ">
+          <router-outlet></router-outlet>
+        </div>
+      <!--</div>-->
+    </div>
+  </div>
+</div>

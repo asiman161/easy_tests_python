@@ -1,4 +1,5 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
+import { CanActivate } from '@angular/router';
 import {
   Http,
   Response,
@@ -7,8 +8,8 @@ import {
   RequestMethod,
   RequestOptions
 } from '@angular/http';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Observable} from 'rxjs/Observable';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/share';
 
 import {
@@ -19,7 +20,7 @@ import {
 } from './angular2-token.model';
 
 @Injectable()
-export class Angular2TokenService {
+export class Angular2TokenService implements CanActivate {
 
   get currentUserType(): string {
     if (this._currentUserType != null) {
@@ -51,6 +52,26 @@ export class Angular2TokenService {
     return !!this._currentAuthData;
   }
 
+  canActivate() {
+    if (this.userSignedIn()) {
+      return true;
+    } else {
+      // Store current location in storage (usefull for redirection after signing in)
+      if (this._options.signInStoredUrlStorageKey) {
+        localStorage.setItem(
+          this._options.signInStoredUrlStorageKey,
+          window.location.pathname + window.location.search
+        );
+      }
+
+      // Redirect user to sign in if signInRedirect is set
+      if (this._options.signInRedirect) {
+        this._router.navigate([this._options.signInRedirect]);
+      }
+      return false;
+    }
+  }
+
   // Inital configuration
   init(options?: Angular2TokenOptions) {
 
@@ -63,6 +84,7 @@ export class Angular2TokenService {
 
       signOutPath: 'auth/sign_out',
       validateTokenPath: 'auth/validate_token',
+      refreshTokenPath: 'auth/refresh_token',
 
       registerAccountPath: 'auth',
       deleteAccountPath: 'auth',
@@ -90,6 +112,7 @@ export class Angular2TokenService {
     this._options = (<any>Object).assign(defaultOptions, options);
 
     this._tryLoadAuthData();
+    this._tryRefreshToken();
   }
 
   // Register request
@@ -118,6 +141,7 @@ export class Angular2TokenService {
 
   // Sign in request and set storage
   signIn(email: string, password: string, userType?: string): Observable<Response> {
+
     if (userType == null) {
       this._currentUserType = null;
     } else {
@@ -125,22 +149,23 @@ export class Angular2TokenService {
     }
 
     const body = JSON.stringify({
-      username: email,
+      email: email,
       password: password
     });
 
     const observ = this.post(this._constructUserPath() + this._options.signInPath, body);
+
     observ.subscribe(res => {
-      this._currentUserData = res.json().data;
-      // console.log(res.json().data, 123123123);
-      // this._options.globalOptions.headers['token'] = res.json().data.token;
+      this._currentUserData = res.json();
+      this.setToken(res.json());
     }, error => null);
 
     return observ;
   }
 
   setToken(data: any) {
-    this._options.globalOptions.headers['Authorization'] = `JWT ${data}`;
+    this._options.globalOptions.headers['Authorization'] = `JWT ${data.token}`;
+    localStorage.setItem('token', `JWT ${data.token}`);
   }
 
   signInOAuth(oAuthType: string) {
@@ -155,10 +180,9 @@ export class Angular2TokenService {
   }
 
   // Sign out request and delete storage
-  signOut(): Observable<Response> {
-    const observ = this.delete(this._constructUserPath() + this._options.signOutPath);
-
+  signOut(): boolean {
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('token');
     localStorage.removeItem('client');
     localStorage.removeItem('expiry');
     localStorage.removeItem('tokenType');
@@ -168,16 +192,26 @@ export class Angular2TokenService {
     this._currentUserType = null;
     this._currentUserData = null;
 
-    return observ;
+    return true;
   }
 
   // Validate token request
   validateToken(): Observable<Response> {
-    const observ = this.get(this._constructUserPath() + this._options.validateTokenPath);
+    let token = localStorage.getItem('token');
+    if (token) {
+      token = token.substr(4);
+    }
+    const observ = this.post(this._constructUserPath() + this._options.validateTokenPath, {token: token});
 
     observ.subscribe(res => this._currentUserData = res.json().data, error => null);
 
     return observ;
+  }
+
+  // refresh token
+  refreshToken(token) {
+    this._options.globalOptions.headers['Authorization'] = `JWT ${token}`;
+    localStorage.setItem('token', `JWT ${token}`);
   }
 
   // Update password request
@@ -285,6 +319,7 @@ export class Angular2TokenService {
     // Merge auth headers to request if set
     if (this._currentAuthData != null) {
       (<any>Object).assign(baseHeaders, {
+        'token': this._currentAuthData.token,
         'access-token': this._currentAuthData.accessToken,
         'client': this._currentAuthData.client,
         'expiry': this._currentAuthData.expiry,
@@ -319,15 +354,15 @@ export class Angular2TokenService {
 
   private _parseAuthHeadersFromResponse(data: any) {
     const headers = data.headers;
-
     const authData: AuthData = {
+      // token: headers.get('token'),
+      token: data.json().token,
       accessToken: headers.get('access-token'),
       client: headers.get('client'),
       expiry: headers.get('expiry'),
       tokenType: headers.get('token-type'),
       uid: headers.get('uid')
     };
-
     this._setAuthData(authData);
   }
 
@@ -335,6 +370,7 @@ export class Angular2TokenService {
   private _getAuthDataFromStorage() {
 
     const authData: AuthData = {
+      token: localStorage.getItem('token'),
       accessToken: localStorage.getItem('accessToken'),
       client: localStorage.getItem('client'),
       expiry: localStorage.getItem('expiry'),
@@ -352,6 +388,7 @@ export class Angular2TokenService {
     if (this._activatedRoute.queryParams) {// Fix for Testing, needs to be removed later
       this._activatedRoute.queryParams.subscribe(queryParams => {
         const authData: AuthData = {
+          token: queryParams['token'],
           accessToken: queryParams['token'],
           client: queryParams['client_id'],
           expiry: queryParams['expiry'],
@@ -370,9 +407,7 @@ export class Angular2TokenService {
 
   // Write auth data to storage
   private _setAuthData(authData: AuthData) {
-
     if (this._checkIfComplete(authData) && this._checkIfNewer(authData)) {
-
       this._currentAuthData = authData;
 
       localStorage.setItem('accessToken', authData.accessToken);
@@ -389,19 +424,34 @@ export class Angular2TokenService {
 
   // Check if auth data complete
   private _checkIfComplete(authData: AuthData): boolean {
-    return authData.accessToken != null &&
-      authData.client != null &&
-      authData.expiry != null &&
-      authData.tokenType != null &&
-      authData.uid != null;
+    return authData.token != null; // &&
+    // authData.client != null &&
+    // authData.expiry != null &&
+    // authData.tokenType != null &&
+    // authData.uid != null;
   }
 
   // Check if response token is newer
   private _checkIfNewer(authData: AuthData): boolean {
-    if (this._currentAuthData != null) {
-      return authData.expiry >= this._currentAuthData.expiry;
-    } else {
-      return true;
+    // if (this._currentAuthData != null) {
+    //   return authData.expiry >= this._currentAuthData.expiry;
+    // } else {
+    //   return true;
+    // }
+    return true;
+  }
+
+  // Try to refresh token
+  private _tryRefreshToken() {
+    let token = localStorage.getItem('token');
+    if (token) {
+      token = token.substr(4);
+      this.post(this._constructUserPath() + this._options.refreshTokenPath, {token: token}).subscribe(res => {
+        let newToken = res.json().token;
+        this.refreshToken(newToken);
+      }, error => {
+        this.signOut();
+      });
     }
   }
 

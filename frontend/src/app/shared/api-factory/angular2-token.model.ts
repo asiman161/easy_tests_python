@@ -1,4 +1,5 @@
 export interface AuthData {
+    token:          string;
     accessToken:    string;
     client:         string;
     expiry:         string;
@@ -42,6 +43,7 @@ export interface Angular2TokenOptions {
 
     signOutPath?:               string;
     validateTokenPath?:         string;
+    refreshTokenPath?:          string;
 
     deleteAccountPath?:         string;
     registerAccountPath?:       string;

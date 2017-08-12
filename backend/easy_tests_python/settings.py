@@ -11,11 +11,13 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import datetime
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+
 SECRET_KEY = 'r6bk2^_6p^d7@zp5o$14h3ue+=y7-!u8nxto_)9d2o6(6@9@0('
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -98,6 +100,14 @@ DATABASES = {
 }
 
 AUTH_USER_MODEL = 'users.User'
+
+JWT_AUTH = {
+    'JWT_RESPONSE_PAYLOAD_HANDLER':
+        'users.views.jwt_response_payload_handler',
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(weeks=2),
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators

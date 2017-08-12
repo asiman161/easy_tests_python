@@ -3,6 +3,8 @@ from django.core.validators import validate_comma_separated_integer_list
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.utils.translation import ugettext_lazy as _
 
+# from .serializers import UserSerializer
+
 
 class MyUserManager(BaseUserManager):
     """

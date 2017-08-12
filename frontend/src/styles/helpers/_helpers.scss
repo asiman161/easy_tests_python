@@ -1,0 +1,61 @@
+.mr-top-05 {
+  margin-top: .5em;
+}
+
+.mr-right-05 {
+  margin-right: .5em;
+}
+
+.mr-bottom-05 {
+  margin-bottom: .5em;
+}
+
+.mr-left-1 {
+  margin-left: 1em;
+}
+
+
+.mr-minus-05 {
+  margin-right: -.5rem;
+  margin-left: -.5rem;
+}
+
+.mr-reset {
+  margin: 0!important;
+}
+
+.pd-reset-sides {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+@media #{$xs-screen} {
+  .xs-hide {
+    display: none !important;
+  }
+}
+@media #{$sm-screen} {
+  .sm-hide {
+    display: none !important;
+  }
+}
+@media #{$md-screen} {
+  .md-hide {
+    display: none !important;
+  }
+}
+@media #{$lg-screen} {
+  .lg-hide {
+    display: none !important;
+  }
+}

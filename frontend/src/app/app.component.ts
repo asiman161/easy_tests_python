@@ -1,33 +1,32 @@
-import {Component, OnInit} from '@angular/core';
-import {Angular2TokenService} from './shared/api-factory/angular2-token.service';
+import { Component, ViewEncapsulation, OnInit, ViewContainerRef } from '@angular/core';
 
+import { Angular2TokenService } from './shared/api-factory/angular2-token.service';
+import { ToastsManager } from 'ng2-toastr';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  encapsulation: ViewEncapsulation.None
 })
+
 export class AppComponent implements OnInit {
-  title = 'app';
-
-  constructor(private _tokenService: Angular2TokenService) {
-
+  constructor(private _tokenService: Angular2TokenService,
+              private _vcr: ViewContainerRef,
+              private toastr: ToastsManager) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.toastr.setRootViewContainerRef(this._vcr);
+    this.toastr.onClickToast().subscribe( toast => {
+        this.toastr.dismissToast(toast);
+      });
     this._tokenService.init({
-      signInPath: 'api-token-auth/',
-    });
-  }
-
-  getData() {
-    this._tokenService.get('api/tasks').subscribe(data => {console.log(data)});
-  }
-
-  login() {
-    console.log(555);
-    this._tokenService.signIn('vlad', 'vladvlad').subscribe( (ress: any) => {
-      this._tokenService.setToken(JSON.parse(ress._body).token);
+      apiPath: 'api',
+      signInRedirect: 'auth',
+      signInPath: 'auth/login/',
+      signOutPath: 'auth/logout/',
+      refreshTokenPath: 'auth/refresh-token/',
+      validateTokenPath: 'auth/validate-token/',
     });
   }
 }
