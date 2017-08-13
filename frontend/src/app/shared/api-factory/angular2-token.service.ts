@@ -355,8 +355,9 @@ export class Angular2TokenService implements CanActivate {
   private _parseAuthHeadersFromResponse(data: any) {
     const headers = data.headers;
     let token = localStorage.getItem('token')
-      || this._options.globalOptions.headers['Authorization'].substr(4)
+      || this._options.globalOptions.headers['Authorization']
       || data.json().token;
+    token = token.replace(/^JWT /, '');
     const authData: AuthData = {
       token: token,
       accessToken: headers.get('access-token'),
