@@ -354,9 +354,11 @@ export class Angular2TokenService implements CanActivate {
 
   private _parseAuthHeadersFromResponse(data: any) {
     const headers = data.headers;
+    let token = localStorage.getItem('token')
+      || this._options.globalOptions.headers['Authorization'].substr(4)
+      || data.json().token;
     const authData: AuthData = {
-      // token: headers.get('token'),
-      token: data.json().token,
+      token: token,
       accessToken: headers.get('access-token'),
       client: headers.get('client'),
       expiry: headers.get('expiry'),

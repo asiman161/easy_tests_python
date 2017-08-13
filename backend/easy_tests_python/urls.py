@@ -17,7 +17,6 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.staticfiles.views import serve
 from django.views.generic import RedirectView
-from rest_framework_jwt.views import obtain_jwt_token
 
 from tasks.views import ListCreateTasks
 
@@ -27,6 +26,7 @@ urlpatterns = [
         RedirectView.as_view(url='/static/%(path)s', permanent=False)),
     url(r'^api/auth/', include('users.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^api/tasks', ListCreateTasks.as_view(), name='list_tasks'),
+    url(r'^api/tasks/', ListCreateTasks.as_view(), name='tasks-api'),
+    url(r'^api/subjects/', include('subjects.urls'), name='subjects-api'),
     url(r'^api/', include('rest_framework.urls')),
 ]

@@ -27,18 +27,18 @@ export class SubjectsListComponent implements OnInit {
 
   ngOnInit() {
     this._subjectsListService.getSubjects().subscribe((res: any) => {
-      this.subjects = JSON.parse(res._body).data;
+      this.subjects = res.json();
     });
   }
 
-  deleteSubject(id) {
+  deleteSubject(id, index) {
     this._subjectsListService.deleteSubject(id).subscribe((res: any) => {
-        this.subjects = JSON.parse(res._body).data;
-        this._sidebarEventsService.sidebarUpdate.emit({target: 'update'});
-        this._toastr.success('Предмет успешно Удален', 'Успешно!');
-      }, error => {
-        this._toastr.error('Что-то пошло не так', 'Ошибка!');
-      });
+      this.subjects.splice(index, 1);
+      this._sidebarEventsService.sidebarUpdate.emit({target: 'update'});
+      this._toastr.success('Предмет успешно Удален', 'Успешно!');
+    }, error => {
+      this._toastr.error('Что-то пошло не так', 'Ошибка!');
+    });
   }
 
   createSubject() {
@@ -50,11 +50,11 @@ export class SubjectsListComponent implements OnInit {
 
   saveSubject(form) {
     this._subjectsListService.saveSubject(form.value.subject_name).subscribe((res: any) => {
-        this._toastr.success('Предмет успешно создан', 'Успешно!');
-        this.subjects = JSON.parse(res._body).data;
-        this.creatingSubject = false;
-      }, error => {
-        this._toastr.error('Что-то пошло не так', 'Ошибка!');
-      });
+      this._toastr.success('Предмет успешно создан', 'Успешно!');
+      this.subjects.push(res.json());
+      this.creatingSubject = false;
+    }, error => {
+      this._toastr.error('Что-то пошло не так', 'Ошибка!');
+    });
   }
 }

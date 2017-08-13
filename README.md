@@ -20,7 +20,7 @@
 15) cd ~/%project_folder%/backend
 16) open browser on http://localhost:8000
 
-This project in the initial stage and doesn't have api for frontend.
+This project in the initial stage and doesn't have full api for frontend.
 
 You can see this project on https://easy-tests.herokuapp.com
 and https://github.com/asiman161/easy-tests

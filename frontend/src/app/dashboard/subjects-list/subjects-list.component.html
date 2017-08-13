@@ -2,9 +2,9 @@
   <h3>Список предметов</h3>
 </div>
 <ul>
-  <li *ngFor="let subject of subjects">
-    <span>{{subject.subject_name}}</span>
-    <button class="btn btn-danger btn-xs" (click)="deleteSubject(subject.id)">удалить</button>
+  <li *ngFor="let subject of subjects; index as i">
+    <span>{{subject.name}}</span>
+    <button class="btn btn-danger btn-xs" (click)="deleteSubject(subject.id, i)">удалить</button>
   </li>
 </ul>
 <div class="mr-top-05">

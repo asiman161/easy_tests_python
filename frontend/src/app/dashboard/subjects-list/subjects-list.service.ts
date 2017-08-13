@@ -9,14 +9,14 @@ export class SubjectsListService {
   }
 
   getSubjects() {
-    return this._token.get('subjects');
+    return this._token.get('subjects/');
   }
 
   saveSubject(data) {
-    return this._token.post('subjects', {subject_name: data});
+    return this._token.post('subjects/create/', {name: data});
   }
 
   deleteSubject(id) {
-    return this._token.delete(`subjects/${id}`);
+    return this._token.delete(`subjects/${id}/`);
   }
 }
