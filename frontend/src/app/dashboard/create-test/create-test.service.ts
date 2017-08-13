@@ -9,6 +9,6 @@ export class CreateTestService {
   }
 
   save(data) {
-    return this._token.post('create-test', data);
+    return this._token.post('tasks/create/', data);
   }
 }

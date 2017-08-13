@@ -46,11 +46,10 @@ export class CreateTestComponent implements OnInit {
         this.initVariants()
       ])
     });
-
-    this._token.get('subjects').subscribe((res: any) => {
-      const subjectsResponse = JSON.parse(res._body).data;
+    this._token.get('subjects/').subscribe((res: any) => {
+      const subjectsResponse = res.json();
       this.subjects = subjectsResponse.map(item => {
-        return {text: item.subject_name, id: item.id};
+        return {text: item.name, id: item.id};
       });
     });
   }
@@ -112,16 +111,23 @@ export class CreateTestComponent implements OnInit {
 
   save() {
     if (this.createWork.valid) {
-      const test_data = {
-        title: this.createWork.value.title,
+      let answers = new Array(this.createWork.value.variants.length);
+      for (let i = 0; i < this.createWork.value.variants.length; i++) {
+        answers[i] = !answers[i] ? [] : answers[i]; // if arr[i] undefined create new arr
+        for (let j = 0; j < this.createWork.value.variants[i].questions.length; j++) {
+          answers[i][j] = this.createWork.value.variants[i].questions[j].question_right_answers;
+          this.createWork.value.variants[i].questions[j].question_right_answers = [];
+        }
+      }
+
+      this._createTestService.save({
+        answers: answers,
+        name: this.createWork.value.title,
+        subject: this.createWork.value.subject_id,
+        test_type: this.testType,
         time: this.createWork.value.time,
         random_variant: this.createWork.value.random_variant,
-        variants: this.createWork.value.variants
-      };
-      this._createTestService.save({
-        test_data: test_data,
-        subject_id: this.createWork.value.subject_id,
-        test_type: this.testType
+        data: this.createWork.value.variants
       }).subscribe(() => {
         this._toastr.success('Работа успешно создана', 'Успешно!');
         this._sidebarEventsService.sidebarUpdate.emit({target: 'update'});

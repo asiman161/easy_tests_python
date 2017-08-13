@@ -3,7 +3,14 @@ from rest_framework.permissions import AllowAny
 
 from .models import Subject
 from .serializers import SubjectSerializer
-from users.permissions import IsOwner
+
+
+class SubjectCreateAPIView(CreateAPIView):
+    queryset = Subject.objects.all()
+    serializer_class = SubjectSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class SubjectListAPIView(ListAPIView):
@@ -13,14 +20,6 @@ class SubjectListAPIView(ListAPIView):
     def get_queryset(self, *args, **kwargs):
         queryset_list = Subject.objects.filter(user=self.request.user)
         return queryset_list
-
-
-class SubjectCreateAPIView(CreateAPIView):
-    queryset = Subject.objects.all()
-    serializer_class = SubjectSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
 
 
 class SubjectDetailAPIView(RetrieveUpdateDestroyAPIView):

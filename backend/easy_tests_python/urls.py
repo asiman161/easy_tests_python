@@ -18,7 +18,6 @@ from django.contrib import admin
 from django.contrib.staticfiles.views import serve
 from django.views.generic import RedirectView
 
-from tasks.views import ListCreateTasks
 
 urlpatterns = [
     url(r'^$', serve, kwargs={'path': 'index.html'}),
@@ -26,7 +25,7 @@ urlpatterns = [
         RedirectView.as_view(url='/static/%(path)s', permanent=False)),
     url(r'^api/auth/', include('users.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^api/tasks/', ListCreateTasks.as_view(), name='tasks-api'),
-    url(r'^api/subjects/', include('subjects.urls'), name='subjects-api'),
+    url(r'^api/tasks/', include('tasks.urls', namespace='tasks-api')),
+    url(r'^api/subjects/', include('subjects.urls', namespace='subjects-api')),
     url(r'^api/', include('rest_framework.urls')),
 ]
