@@ -12,7 +12,7 @@ class UserSerializer(ModelSerializer):
             'last_name',
             'patronymic',
             'image',
-            'roles',
+            'role',
             'key',
             'group_id',
         ]

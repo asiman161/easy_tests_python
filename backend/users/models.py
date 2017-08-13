@@ -49,13 +49,11 @@ class User(AbstractBaseUser, PermissionsMixin):
                               blank=True,
                               width_field='width_field',
                               height_field='height_field')
-    roles = models.CharField(
-        max_length=30,
-        validators=[validate_comma_separated_integer_list],
+    role = models.PositiveSmallIntegerField(
         default=0
     )
-    key = models.CharField(null=True, blank=True, max_length=15)
-    group_id = models.PositiveIntegerField(null=True, blank=True)
+    key = models.CharField(db_index=True, null=True, blank=True, max_length=15)
+    group_id = models.PositiveIntegerField(db_index=True, null=True, blank=True)
     is_staff = models.BooleanField(
         _('staff status'),
         default=False,

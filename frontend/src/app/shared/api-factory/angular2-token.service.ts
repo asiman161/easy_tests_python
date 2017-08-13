@@ -156,7 +156,7 @@ export class Angular2TokenService implements CanActivate {
     const observ = this.post(this._constructUserPath() + this._options.signInPath, body);
 
     observ.subscribe(res => {
-      this._currentUserData = res.json();
+      this._currentUserData = res.json().user;
       this.setToken(res.json());
     }, error => null);
 
@@ -203,7 +203,7 @@ export class Angular2TokenService implements CanActivate {
     }
     const observ = this.post(this._constructUserPath() + this._options.validateTokenPath, {token: token});
 
-    observ.subscribe(res => this._currentUserData = res.json().data, error => null);
+    observ.subscribe(res => this._currentUserData = res.json().user, error => null);
 
     return observ;
   }
@@ -448,6 +448,7 @@ export class Angular2TokenService implements CanActivate {
       token = token.substr(4);
       this.post(this._constructUserPath() + this._options.refreshTokenPath, {token: token}).subscribe(res => {
         let newToken = res.json().token;
+        this._currentUserData = res.json().user;
         this.refreshToken(newToken);
       }, error => {
         this.signOut();
