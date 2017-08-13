@@ -28,4 +28,5 @@ urlpatterns = [
     url(r'^api/auth/', include('users.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^api/tasks', ListCreateTasks.as_view(), name='list_tasks'),
+    url(r'^api/', include('rest_framework.urls')),
 ]

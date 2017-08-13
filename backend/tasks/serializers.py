@@ -6,5 +6,16 @@ from .models import Task
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ('id', 'name', 'address')
+        fields = (
+            'name',
+            'data',
+            'answers',
+            'time',
+            'show_task',
+            'random_variant',
+            'variants_count',
+            'task_type'
+            'user',
+            'subject'
+        )
 

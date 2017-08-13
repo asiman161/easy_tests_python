@@ -40,7 +40,10 @@ INSTALLED_APPS = [
 
     'users',
     'groups',
+    'subjects',
     'tasks',
+    'completed_tasks',
+    'feedbacks',
 ]
 
 MIDDLEWARE = [
