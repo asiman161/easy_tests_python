@@ -123,7 +123,7 @@ export class CreateTestComponent implements OnInit {
       this._createTestService.save({
         answers: answers,
         name: this.createWork.value.title,
-        subject: this.createWork.value.subject_id,
+        subject_id: this.createWork.value.subject_id,
         test_type: this.testType,
         time: this.createWork.value.time,
         random_variant: this.createWork.value.random_variant,

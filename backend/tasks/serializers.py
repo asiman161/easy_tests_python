@@ -3,7 +3,17 @@ from rest_framework import serializers
 from .models import Task
 
 
-class CreateTaskSerializer(serializers.ModelSerializer):
+class TaskSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = (
+            'id',
+            'name',
+            'show_task',
+        )
+
+
+class CreateUpdateTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = (
@@ -15,6 +25,4 @@ class CreateTaskSerializer(serializers.ModelSerializer):
             'random_variant',
             'variants_count',
             'task_type',
-            'subject',
         )
-

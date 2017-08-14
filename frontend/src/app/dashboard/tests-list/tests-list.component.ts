@@ -22,24 +22,24 @@ export class TestsListComponent implements OnInit {
   }
 
   getTests() {
-    this._testsListService.getTests().subscribe((res: any) => {
-      this.subjectsList = JSON.parse(res._body).data;
+    this._testsListService.getTasks().subscribe((res: any) => {
+      this.subjectsList = res.json();
     });
   }
 
   changeTestVisibility(id: number, visibility: boolean, subject_index: number, test_index: number) {
-    this._testsListService.changeTestVisibility(id, visibility).subscribe(() => {
+    this._testsListService.changeTaskVisibility(id, visibility).subscribe(() => {
       this._toastr.success('Видимость работы изменена', 'Успешно!');
-      this.subjectsList[subject_index].tests[test_index].show_test = !visibility;
+      this.subjectsList[subject_index].tasks[test_index].show_task = !visibility;
     }, error => {
       this._toastr.error('Что-то пошло не так', 'Ошибка!');
     });
   }
 
   deleteTest(id: number, subject_index: number, test_index: number) {
-    this._testsListService.deleteTest(id).subscribe(() => {
+    this._testsListService.deleteTask(id).subscribe(() => {
         this._toastr.success('Работа успешно удалена', 'Успешно!');
-        this.subjectsList[subject_index].tests.splice(test_index, 1);
+        this.subjectsList[subject_index].tasks.splice(test_index, 1);
         this._sidebarEventsService.sidebarUpdate.emit({target: 'update'});
       }, error => {
         this._toastr.error('Что-то пошло не так', 'Ошибка!');

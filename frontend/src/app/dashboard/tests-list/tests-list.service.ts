@@ -8,15 +8,15 @@ export class TestsListService {
 
   }
 
-  getTests() {
-    return this._token.get('teacher-tests');
+  getTasks() {
+    return this._token.get('tasks/tasks-teacher/');
   }
 
-  changeTestVisibility(id: number, visibility: boolean) {
-    return this._token.patch(`test-visibility/${id}`, {show_test: visibility});
+  changeTaskVisibility(id: number, visibility: boolean) {
+    return this._token.patch(`tasks/${id}/task-visibility/`, {show_task: visibility});
   }
 
-  deleteTest(id: number) {
-    return this._token.delete(`tests/${id}`);
+  deleteTask(id: number) {
+    return this._token.delete(`tasks/${id}/delete/`);
   }
 }

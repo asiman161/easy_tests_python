@@ -2,8 +2,6 @@ from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 
-from subjects.models import Subject
-
 
 class Task(models.Model):
     name = models.CharField(max_length=150)
@@ -16,7 +14,6 @@ class Task(models.Model):
     variants_count = models.PositiveSmallIntegerField(default=0)
     task_type = models.PositiveSmallIntegerField(default=0)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    subject = models.ForeignKey(Subject)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
