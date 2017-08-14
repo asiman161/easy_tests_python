@@ -10,15 +10,17 @@
 7) npm start
 8) cd ~/%project_folder%/backend
 9) python manage.py migrate
-10) python manage.py runserver
-11) open browser on http://localhost:4200
+10) python manage.py createsuperuser
+11) change user field(role) from 0 to 3 in db
+12) python manage.py runserver
+13) open browser on http://localhost:4200
 
 - optional
-12) close frontend server
-13) cd ~/%project_folder%/frontend
-14) npm run build:prod:aot
-15) cd ~/%project_folder%/backend
-16) open browser on http://localhost:8000
+14) close frontend server
+15) cd ~/%project_folder%/frontend
+16) npm run build:prod:aot
+17) cd ~/%project_folder%/backend
+18) open browser on http://localhost:8000
 
 This project in the initial stage and doesn't have full api for frontend.
 
